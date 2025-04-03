@@ -35,7 +35,7 @@ function init() {
     0.1,
     SPACE_SIZE
   );
-  camera.position.set(-9000, 1200, 300);
+  camera.position.set(-18000, 2000, 300);
   camera.lookAt(0, 0 , 0);
 
   // Create renderer
