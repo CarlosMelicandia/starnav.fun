@@ -6,7 +6,10 @@ function createStarfield() {
       size: 1,
       sizeAttenuation: false
     });
-  
+    // ambient light to better see the planets
+    const ambientLight = new THREE.AmbientLight(0x333333);
+    scene.add(ambientLight); 
+       
     const starsCount = 10000;
     const positions = new Float32Array(starsCount * 3);
   
@@ -85,9 +88,13 @@ function createStarfield() {
         color: planetInfo.color,
         shininess: 10,
       });
-      
+
+
       const planet = new THREE.Mesh(planetGeometry, planetMaterial);
       
+      const planetLabel = createLabel(planetInfo);
+      planet.add(planetLabel);
+
       // Position planet
       const angle = Math.random() * Math.PI * 2;
       planet.position.set(
@@ -160,7 +167,7 @@ function createStarfield() {
         
         for (let i = 0; i < moonCount; i++) {
           const moonSize = planetInfo.radius * (0.1 + Math.random() * 0.2);
-          const moonDist = planetInfo.radius * (2 + Math.random() * 3);
+          const moonDist = planetInfo.radius * (2 + Math.random() * 1);
           
           const moonGeometry = new THREE.SphereGeometry(moonSize, 16, 16);
           const moonMaterial = new THREE.MeshPhongMaterial({ color: 0xcccccc });
@@ -176,33 +183,6 @@ function createStarfield() {
           planet.add(moon);
         }
       }
-      
-      // Add label for the planet
-      const labelCanvas = document.createElement('canvas');
-      const labelContext = labelCanvas.getContext('2d');
-      labelCanvas.width = 256;
-      labelCanvas.height = 64;
-  
-      // Draw dark blue box with white border
-      labelContext.fillStyle = '#000080'; // Dark blue
-      labelContext.fillRect(0, 0, labelCanvas.width, labelCanvas.height);
-      labelContext.strokeStyle = 'white'; // White border
-      labelContext.lineWidth = 4;
-      labelContext.strokeRect(0, 0, labelCanvas.width, labelCanvas.height);
-  
-      // Draw planet name in white
-      labelContext.fillStyle = 'white';
-      labelContext.font = '24px Arial';
-      labelContext.textAlign = 'center';
-      labelContext.textBaseline = 'middle';
-      labelContext.fillText(planetInfo.name, labelCanvas.width / 2, labelCanvas.height / 2);
-  
-      const labelTexture = new THREE.CanvasTexture(labelCanvas);
-      const labelMaterial = new THREE.SpriteMaterial({ map: labelTexture });
-      const label = new THREE.Sprite(labelMaterial);
-      label.scale.set(planetInfo.radius * 1.5, planetInfo.radius * 0.5, 1); // Adjust size relative to planet
-      label.position.set(100, 10, 100); // Center the label in the middle of the planet
-      planet.add(label);
       
       scene.add(planet);
       planets.push({

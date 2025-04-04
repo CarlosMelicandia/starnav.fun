@@ -48,6 +48,9 @@ function init() {
   // Create planets
   createPlanets();
 
+  // Create labels
+  createLabel();
+
   // Create rocket model
   createRocket();
 
